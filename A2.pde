@@ -3,8 +3,7 @@ Shape shape = Shape.FREEFORM_LINE;
 Color colour = Color.BLACK;
 Weight weight = Weight.THIN;
 
-// Can we use layers to keep track of previous drawings?
-// PGraphics[] layers = new PGraphics[3];
+PShape previous_shape, current_shape;
 
 int backgroundColor = 102;
 int[] prevLine = new int[] {-1, -1};
@@ -17,6 +16,9 @@ void setup() {
   size(640, 360);
   // TODO: Not sure if this is good for all colors?
   background(backgroundColor);
+  // Initialize our shape 
+  previous_shape = createShape();
+  current_shape = createShape();
 }
 
 void draw() {
@@ -29,43 +31,39 @@ void draw() {
       break;
     }
   case STRAIGHT_LINE:
-  
+
     stroke(getColor());
     strokeWeight(getWeight());
-    
+
     if (mousePressed) {
-      
+
       // We don't need to redraw anything if the mouse is held in the same spot
       if (prevLine[0] != mouseX || prevLine[1] != mouseY) {
-        
-        // Draw over the previous line with the BG color if it exists
+
+        // Set previous line to invisible 
         if (!newLine) {
-          beginShape(LINES);
-          stroke(backgroundColor);
-          strokeWeight(4);
-          vertex(initCoords[0], initCoords[1]);
-          vertex(prevLine[0], prevLine[1]);
-          stroke(getColor());
-          strokeWeight(getWeight());
-          endShape(CLOSE);
+          previous_shape = current_shape;
+          previous_shape.setVisible(false);
         }
-        
+
         // Begin our new line 
-        beginShape(LINES);
-        
+        current_shape.beginShape(LINES);
+
         // Set the initial anchor point for the line
         if (newLine) {
           initCoords[0] = mouseX;
           initCoords[1] = mouseY;
         }
-        
+
         // Draw the straight line 
-        vertex(initCoords[0], initCoords[1]);
-        vertex(mouseX, mouseY);
-        
+        current_shape.vertex(initCoords[0], initCoords[1]);
+        current_shape.vertex(mouseX, mouseY);
+
         // Finish the shape
-        endShape(CLOSE);
-        
+        current_shape.endShape(CLOSE);
+
+        shape(current_shape);
+
         // Set the destination point of the prevLine
         prevLine[0] = mouseX;
         prevLine[1] = mouseY;
