@@ -26,6 +26,10 @@ void keyPressed() {
   case 83:
     weight = Weight.MEDIUM;
     break;
+    // Backspace
+  case 8:
+    delete = true;
+    break;
   default: 
     break;
   }
