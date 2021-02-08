@@ -17,10 +17,8 @@ Boolean newLine = true;
 Boolean delete = false;
 
 void setup() {
-  // TODO: Possibly full screen?
-  size(640, 360);
-  // TODO: Not sure if this is good for all colors?
-  background(backgroundColor);
+  size(600, 600);
+  trackGestures();
 }
 
 void draw() {
@@ -40,13 +38,16 @@ void draw() {
 
   // Show current selected Shape, Color and Weight
   showInputSelections();
+  // Draw gestures when tracked
+  strokeWeight(4);
+  one.draw();
 
   switch (shape) {
     case FREEFORM_LINE: {
       stroke(getColor());
       strokeWeight(getWeight());
 
-      if (mousePressed) {
+      if (mousePressed && mouseButton == LEFT) {
         lineCount++;
         int[] cCoords = new int[]{mouseX, mouseY};
         int[] pCoords = new int[]{pmouseX, pmouseY};
@@ -82,7 +83,7 @@ void draw() {
       stroke(getColor());
       strokeWeight(getWeight());
 
-      if (mousePressed) {
+      if (mousePressed && mouseButton == LEFT) {
         // We don't need to redraw anything if the mouse is held in the same spot
         if (prevLine[0] != mouseX || prevLine[1] != mouseY) {
           if (!newLine) {
