@@ -1,6 +1,7 @@
+/** Imports **/
 import java.util.ArrayList;
 
-/** Global Variables **/
+/** Globals **/
 Shape shape = Shape.FREEFORM_LINE;
 Color colour = Color.BLACK;
 Weight weight = Weight.THIN;
@@ -36,17 +37,20 @@ void draw() {
     shape(s);
   }
 
+  /** Input Scheme **/
   // Show current selected Shape, Color and Weight
   showInputSelections();
   // Draw gestures when tracked
   strokeWeight(4);
   one.draw();
 
+  /** Drawing Shapes **/
+  // Set the stroke and weight before drawing the shape
+  stroke(getColor());
+  fill(getColor());
+  strokeWeight(getWeight());
   switch (shape) {
     case FREEFORM_LINE: {
-      stroke(getColor());
-      strokeWeight(getWeight());
-
       if (mousePressed && mouseButton == LEFT) {
         lineCount++;
         int[] cCoords = new int[]{mouseX, mouseY};
@@ -78,11 +82,9 @@ void draw() {
 
         lineCount = 0;
       }
+      break;
     }
     case STRAIGHT_LINE: {
-      stroke(getColor());
-      strokeWeight(getWeight());
-
       if (mousePressed && mouseButton == LEFT) {
         // We don't need to redraw anything if the mouse is held in the same spot
         if (prevLine[0] != mouseX || prevLine[1] != mouseY) {
@@ -117,9 +119,37 @@ void draw() {
         initCoords[1] = -1;
         newLine = true;
       }
+      break;
     }
     case RECTANGLE: {
-      // TODO: Create Rectangle shape
+      if (mousePressed && mouseButton == LEFT) {
+        // We don't need to redraw anything if the mouse is held in the same spot
+        if (prevLine[0] != mouseX || prevLine[1] != mouseY) {
+          if (!newLine) {
+            shapeArray.remove(shapeArray.size() - 1);
+          }
+
+          PShape current_shape;
+
+          // Set the initial anchor point for the line
+          if (newLine) {
+            initCoords[0] = mouseX;
+            initCoords[1] = mouseY;
+          }
+
+          // Draw the square
+          current_shape = createShape(RECT, initCoords[0], initCoords[1], mouseX - initCoords[0], mouseY - initCoords[1]);
+
+          shapeArray.add(current_shape);
+
+          newLine = false;
+        }
+      } else {
+        initCoords[0] = -1;
+        initCoords[1] = -1;
+        newLine = true;
+      }
+      break;
     }
     case OVAL: {
       // TODO: Create Oval shape
