@@ -61,8 +61,9 @@ void gestures(
   int endY
 ) {
   if(scheme != Scheme.GESTURES) return;
-  // TODO: Show something to show that the gesture was captured
+
   println("Gesture: " + gesture);
+
   // Map gestures to change events
   switch (gesture) {
     case "squiggle": { shape = Shape.FREEFORM_LINE; break; }
@@ -104,9 +105,9 @@ void showInputSelections() {
 void trackGestures() {
   // Creating OneDollar instance
   one = new OneDollar(this);
-  println(one);
-  one.setVerbose(true);
   one.disableAutoCheck();
+  one.disableMaxTime();
+  println(one);
 
   // TODO: Maybe call the gesture by their function to make it easier to map?
 
