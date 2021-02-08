@@ -20,6 +20,7 @@ Boolean delete = false;
 void setup() {
   size(600, 600);
   trackGestures();
+  ellipseMode(CORNER);
 }
 
 void draw() {
@@ -152,7 +153,34 @@ void draw() {
       break;
     }
     case OVAL: {
-      // TODO: Create Oval shape
+      if (mousePressed && mouseButton == LEFT) {
+        // We don't need to redraw anything if the mouse is held in the same spot
+        if (prevLine[0] != mouseX || prevLine[1] != mouseY) {
+          if (!newLine) {
+            shapeArray.remove(shapeArray.size() - 1);
+          }
+
+          PShape current_shape;
+
+          // Set the initial anchor point for the line
+          if (newLine) {
+            initCoords[0] = mouseX;
+            initCoords[1] = mouseY;
+          }
+
+          // Draw the square
+          current_shape = createShape(ELLIPSE, initCoords[0], initCoords[1], mouseX - initCoords[0], mouseY - initCoords[1]);
+
+          shapeArray.add(current_shape);
+
+          newLine = false;
+        }
+      } else {
+        initCoords[0] = -1;
+        initCoords[1] = -1;
+        newLine = true;
+      }
+      break;
     }
   }
 }
