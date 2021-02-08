@@ -28,13 +28,15 @@ void keyPressed() {
     case 8:{ delete = true; break; }
     default: break;
   }
-  // Debugging info
-  print("keyCode: " + keyCode);
-  print("\nshape: " + shape.toString());
-  print("\ncolour: " + colour.toString());
-  print("\nweight: " + weight.toString());
-  print("\ndelete: " + delete);
-  print("\n---------------\n");
 }
 
 // Gestures
+
+
+// Add texts to show currently selected Shape, Color and Weight
+void showInputSelections() {
+  fill(0);
+  text("Shape: " + shape,   width - 150, 15);
+  text("Color: " + colour,  width - 150, 35);
+  text("Weight: " + weight, width - 150, 55);
+}

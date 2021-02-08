@@ -9,7 +9,7 @@ ArrayList<PShape> shapeArray = new ArrayList<PShape>();
 ArrayList<int[]> lineCoords = new ArrayList<int[]>();
 
 int lineCount = 0;
-int backgroundColor = 102;
+int backgroundColor = 255;
 int[] prevLine = new int[] {-1, -1};
 int[] initCoords = new int[] {-1, -1};
 
@@ -24,7 +24,6 @@ void setup() {
 }
 
 void draw() {
-
   // Delete the previous shape
   if (delete) {
     if (shapeArray.size() > 0) {
@@ -33,11 +32,14 @@ void draw() {
     delete = false;
   }
 
-  // Clear and redraw all of our shapes
+  // Redraws all the shapes
   background(backgroundColor);
   for (PShape s : shapeArray) {
     shape(s);
   }
+
+  // Show current selected Shape, Color and Weight
+  showInputSelections();
 
   switch (shape) {
     case FREEFORM_LINE: {
