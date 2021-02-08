@@ -5,7 +5,6 @@ enum Weight {
   THIN    (1),
   MEDIUM  (4),
   THICK   (8);
-
   private final int weight;
   private Weight(int w) { this.weight = w; }
   int getWeight() { return this.weight; }
@@ -23,7 +22,7 @@ color getColor() {
     case BLUE :
       return color(0, 0, 255);
     default:
-       return color(255);
+      return color(255);
   }
 }
 
