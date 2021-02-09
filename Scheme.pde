@@ -1,20 +1,54 @@
 /** Imports **/
 // Gesture tracking utility
 import de.voidplus.dollar.*;
+import java.lang.*;
 
 /** Enums **/
 enum Scheme { SHORTCUTS, GESTURES }
 
 /** Globals **/
+long schemeStartTime = System.currentTimeMillis();
+int inputAttempted = 0;
+int inputRecognized = 0;
 Scheme scheme = Scheme.SHORTCUTS;
 OneDollar one;
 
 /** Scheme Mappings **/
 // Shortuct
 void keyPressed() {
+  // Track how many shortcuts were attemped
+  inputAttempted++;
+
   // Listen for scheme changes
-  if(key == '-') { scheme = Scheme.SHORTCUTS; }
-  if(key == '=') { scheme = Scheme.GESTURES; }
+  if(key == '-') {
+    // Track how many shortcuts were recognized
+    inputRecognized++;
+
+    // Change scheme
+    scheme = Scheme.SHORTCUTS;
+
+    // Track time in scheme and gesture errors
+    println("\nScheme: GESTURES\nTime: " + (System.currentTimeMillis() - schemeStartTime) + "ms\nGesture Attempted: " + inputAttempted + "\nGestures Recognized: " + inputRecognized + "\nErrors: " + (inputAttempted - inputRecognized) + "\n");
+    // Reset counters
+    schemeStartTime = System.currentTimeMillis();
+    inputAttempted = 0;
+    inputRecognized = 0;
+  }
+  if(key == '=') {
+    // Track how many shortcuts were recognized
+    inputRecognized++;
+
+    // Change scheme
+    scheme = Scheme.GESTURES;
+
+    // Track time in scheme and shortcut errors
+    println("\nScheme: SHORTCUTS\nTime: " + (System.currentTimeMillis() - schemeStartTime) + "ms\nShortcuts Attempted: " + inputAttempted + "\nShortcuts Recognized: " + inputRecognized + "\nErrors: " + (inputAttempted - inputRecognized) + "\n");
+    schemeStartTime = System.currentTimeMillis();
+    // Reset counters
+    schemeStartTime = System.currentTimeMillis();
+    inputAttempted = 0;
+    inputRecognized = 0;
+  }
 
   // Break when not in SHORTCUTS mode
   if(scheme != Scheme.SHORTCUTS) return;
@@ -22,29 +56,89 @@ void keyPressed() {
   // Map keys to change events
   switch (keyCode) {
     // 1
-    case 49: { shape = Shape.FREEFORM_LINE; break; }
+    case 49: {
+      shape = Shape.FREEFORM_LINE;
+      // Track how many shortcuts were recognized
+      inputRecognized++;
+      break;
+    }
     // 2
-    case 50: { shape = Shape.STRAIGHT_LINE; break; }
+    case 50: {
+      shape = Shape.STRAIGHT_LINE;
+      // Track how many shortcuts were recognized
+      inputRecognized++;
+      break;
+    }
     // 3
-    case 51: { shape = Shape.RECTANGLE; break; }
+    case 51: {
+      shape = Shape.RECTANGLE;
+      // Track how many shortcuts were recognized
+      inputRecognized++;
+      break;
+    }
     // 4
-    case 52: { shape = Shape.OVAL; break; }
+    case 52: {
+      shape = Shape.OVAL;
+      // Track how many shortcuts were recognized
+      inputRecognized++;
+      break;
+    }
     // q
-    case 81: { colour = Color.BLACK; break; }
+    case 81: {
+      colour = Color.BLACK;
+      // Track how many shortcuts were recognized
+      inputRecognized++;
+      break;
+    }
     // w
-    case 87: { colour = Color.RED; break; }
+    case 87: {
+      colour = Color.RED;
+      // Track how many shortcuts were recognized
+      inputRecognized++;
+      break;
+    }
     // e
-    case 69: { colour = Color.GREEN; break; }
+    case 69: {
+      colour = Color.GREEN;
+      // Track how many shortcuts were recognized
+      inputRecognized++;
+      break;
+    }
     // r
-    case 82: { colour = Color.BLUE; break; }
+    case 82: {
+      colour = Color.BLUE;
+      // Track how many shortcuts were recognized
+      inputRecognized++;
+      break;
+    }
     // a
-    case 65: { weight = Weight.THIN; break; }
+    case 65: {
+      weight = Weight.THIN;
+      // Track how many shortcuts were recognized
+      inputRecognized++;
+      break;
+    }
     // s
-    case 83: { weight = Weight.MEDIUM; break; }
+    case 83: {
+      weight = Weight.MEDIUM;
+      // Track how many shortcuts were recognized
+      inputRecognized++;
+      break;
+    }
     // d
-    case 68: { weight = Weight.THICK; break; }
+    case 68: {
+      weight = Weight.THICK;
+      // Track how many shortcuts were recognized
+      inputRecognized++;
+      break;
+    }
     // Backspace
-    case 8:{ delete = true; break; }
+    case 8:{
+      delete = true;
+      // Track how many shortcuts were recognized
+      inputRecognized++;
+      break;
+    }
     default: break;
   }
 }
@@ -62,6 +156,10 @@ void gestures(
 ) {
   if(scheme != Scheme.GESTURES) return;
 
+  // Track how many gestures were recognized
+  inputRecognized++;
+
+  // TODO: For debugging only
   println("Gesture: " + gesture);
 
   // Map gestures to change events
@@ -109,8 +207,6 @@ void trackGestures() {
   one.disableMaxTime();
   println(one);
 
-  // TODO: Maybe call the gesture by their function to make it easier to map?
-
   // Add SHAPE gestures
   // http://depts.washington.edu/acelab/proj/dollar/unistrokes.gif
   one.learn("squiggle", new int[] {77,238,77,238,77,237,77,237,77,236,77,234,77,233,77,232,77,231,78,229,78,228,79,227,79,225,80,224,80,223,81,223,81,222,82,221,82,221,82,220,82,220,82,220,83,219,83,219,84,218,85,218,85,217,86,216,87,215,88,215,89,214,90,213,91,213,91,213,92,212,94,212,94,211,95,211,96,210,97,210,98,210,100,209,100,208,102,208,103,207,106,207,107,206,109,206,110,205,111,205,113,204,115,203,115,203,118,203,120,202,123,201,124,201,126,201,129,200,129,200,132,200,133,200,135,199,137,199,140,199,144,199,146,199,148,199,152,199,155,199,156,199,156,199,159,199,160,199,163,199,164,199,167,200,168,200,170,201,171,201,172,201,172,201,175,202,175,202,178,204,179,204,180,204,182,207,183,207,183,207,184,208,187,210,188,210,189,211,191,212,191,213,192,213,192,213,196,216,197,217,198,217,199,219,203,222,203,223,204,223,206,225,207,226,210,228,211,229,212,230,213,231,214,232,216,233,220,236,222,237,224,238,226,240,227,240,229,241,231,242,232,243,237,246,239,247,240,248,242,248,243,249,245,250,247,250,248,251,250,251,252,252,258,254,261,255,264,255,268,256,271,256,275,257,278,257,281,258,284,258,287,258,289,259,292,259,294,259,296,260,298,260,300,260,302,260,304,261,307,261,309,261,312,261,315,261,317,261,319,261,321,260,323,260,327,258,329,258,331,257,333,256,334,255,337,254,339,254,339,253,341,253,342,252,344,251,344,251,345,250,346,250,347,249,348,248,349,248,350,247,351,246,351,245,353,244,353,243,354,242,355,242,355,241,357,240,357,239,358,238,358,237,359,237,359,236,360,235,361,234,361,233,362,232,363,231,364,229,365,228,365,226,367,221,368,220,368,219,369,218,369,218,369,217,369,216,370,215,370,214,371,214,371,213,371,212,371,211,372,211,372,210,372,209,372,208,372,207,373,207,373,207,373,206,373,206,373,205,373,205,373,205,} );
@@ -131,7 +227,8 @@ void trackGestures() {
   one.learn("H", new int[] { 137,145,137,146,137,149,138,154,140,166,145,182,150,206,155,220,159,240,165,266,168,282,169,292,171,298,172,306,172,311,173,312,173,313,173,312,173,312,172,309,171,307,168,300,165,290,162,278,159,267,158,261,157,253,156,244,155,237,154,234,154,228,153,225,152,221,152,221,152,220,152,220,152,220,153,220,164,220,174,218,180,217,191,215,200,214,207,213,211,213,214,213,218,213,220,213,221,213,221,212,222,212,222,212,223,212,226,212,227,212,228,212,230,212,230,211,230,211,230,210,229,209,227,204,225,199,223,191,221,182,219,172,218,165,217,155,217,148,217,143,217,141,218,137,218,134,218,134,218,134,218,134,219,134,220,137,224,146,227,151,233,166,240,182,249,216,252,231,255,247,260,273,262,286,264,301,266,312,267,316,268,321,269,324,269,325,270,326,270,326,270,326,270,326,270,326,270,327,270,327});
 
   // Add delete gesture
-  one.learn("delete", new int[] {123,129,123,131,124,133,125,136,127,140,129,142,133,148,137,154,143,158,145,161,148,164,153,170,158,176,160,178,164,183,168,188,171,191,175,196,178,200,180,202,181,205,184,208,186,210,187,213,188,215,186,212,183,211,177,208,169,206,162,205,154,207,145,209,137,210,129,214,122,217,118,218,111,221,109,222,110,219,112,217,118,209,120,207,128,196,135,187,138,183,148,167,157,153,163,145,165,142,172,133,177,127,179,127,180,125} );
+  // X gesture
+  one.learn("delete", new int[] {87,142,89,145,91,148,93,151,96,155,98,157,100,160,102,162,106,167,108,169,110,171,115,177,119,183,123,189,127,193,129,196,133,200,137,206,140,209,143,212,146,215,151,220,153,222,155,223,157,225,158,223,157,218,155,211,154,208,152,200,150,189,148,179,147,170,147,158,147,148,147,141,147,136,144,135,142,137,140,139,135,145,131,152,124,163,116,177,108,191,100,206,94,217,91,222,89,225,87,226,87,224} );
 
   // Bind gesture to a function
   one.bind("squiggle line rectangle circle B R G backward_B vertical_line vertical_line_line H delete", "gestures");
@@ -144,7 +241,13 @@ void mouseDragged() {
   }
 }
 
-// When releasing the mouse, check
+// On right mouse release and in gesture mode, track gesture
 void mouseReleased() {
-  one.check();
+  if(mouseButton == RIGHT && scheme == Scheme.GESTURES) {
+    one.check();
+    // Track how many gestures are being attempted.
+    inputAttempted++;
+  }
 }
+
+
